@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TalentAI — AI Recruitment Agency</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #080b14;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        nav {
+            width: 100%;
+            padding: 20px 7%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+
+            background: rgba(8, 11, 20, 0.85);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            color: #7c5cff;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #b8bdca;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #7c5cff, #4f8cff);
+            padding: 11px 20px;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* ================= HERO ================= */
+
+        .hero {
+            min-height: 100vh;
+            padding: 170px 7% 100px;
+
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            align-items: center;
+            gap: 60px;
+
+            background:
+                radial-gradient(circle at 80% 30%, rgba(90,70,255,0.22), transparent 30%),
+                radial-gradient(circle at 20% 20%, rgba(0,180,255,0.12), transparent 30%);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 7px 14px;
+            border: 1px solid rgba(124,92,255,0.4);
+            background: rgba(124,92,255,0.1);
+            border-radius: 50px;
+            color: #a99aff;
+            font-size: 13px;
+            margin-bottom: 22px;
+        }
+
+        .hero h1 {
+            font-size: clamp(45px, 6vw, 78px);
+            line-height: 1.05;
+            letter-spacing: -4px;
+            max-width: 750px;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(90deg, #8d72ff, #4db8ff);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            margin-top: 25px;
+            color: #a7adbb;
+            max-width: 600px;
+            font-size: 18px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 35px;
+        }
+
+        .primary-btn,
+        .secondary-btn {
+            padding: 14px 24px;
+            border-radius: 9px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, #7c5cff, #4f8cff);
+            color: white;
+            box-shadow: 0 10px 35px rgba(92,80,255,0.25);
+        }
+
+        .secondary-btn {
+            border: 1px solid #303645;
+            color: white;
+        }
+
+        .primary-btn:hover,
+        .secondary-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        /* ================= AI CARD ================= */
+
+        .ai-card {
+            background: rgba(18,22,35,0.85);
+            border: 1px solid #272d40;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .card-header h3 {
+            font-size: 16px;
+        }
+
+        .status {
+            font-size: 11px;
+            color: #55e6a5;
+            background: rgba(85,230,165,0.1);
+            padding: 6px 10px;
+            border-radius: 20px;
+        }
+
+        .candidate {
+            padding: 17px;
+            margin-bottom: 12px;
+            background: #101522;
+            border: 1px solid #242b3c;
+            border-radius: 12px;
+        }
+
+        .candidate-top {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .candidate-name {
+            font-weight: 600;
+        }
+
+        .score {
+            color: #62e6a8;
+            font-weight: bold;
+        }
+
+        .candidate-role {
+            font-size: 12px;
+            color: #8f96a6;
+            margin-top: 4px;
+        }
+
+        .progress {
+            height: 5px;
+            background: #252b39;
+            border-radius: 10px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+
+        .progress span {
+            display: block;
+            height: 100%;
+            background: linear-gradient(90deg, #7c5cff, #4db8ff);
+            border-radius: 10px;
+        }
+
+        /* ================= STATS ================= */
+
+        .stats {
+            padding: 40px 7%;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            border-top: 1px solid #191e2b;
+            border-bottom: 1px solid #191e2b;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat h2 {
+            font-size: 35px;
+            color: #ffffff;
+        }
+
+        .stat p {
+            color: #818897;
+            font-size: 13px;
+        }
+
+        /* ================= GENERAL ================= */
+
+        section {
+            padding: 110px 7%;
+        }
+
+        .section-title {
+            text-align: center;
+            max-width: 700px;
+            margin: auto;
+        }
+
+        .section-title h2 {
+            font-size: 42px;
+            letter-spacing: -1.5px;
+        }
+
+        .section-title p {
+            color: #8e95a5;
+            margin-top: 12px;
+        }
+
+        /* ================= SERVICES ================= */
+
+        .services {
+            margin-top: 55px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .service {
+            padding: 28px;
+            border: 1px solid #252b3a;
+            background: #0e121d;
+            border-radius: 15px;
+            transition: 0.3s;
+        }
+
+        .service:hover {
+            transform: translateY(-7px);
+            border-color: #6652d9;
+        }
+
+        .icon {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: rgba(124,92,255,0.12);
+            color: #9c8bff;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .service h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .service p {
+            color: #818897;
+            font-size: 14px;
+        }
+
+        /* ================= PROCESS ================= */
+
+        .process {
+            background: #0b0f19;
+        }
+
+        .steps {
+            margin-top: 60px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .step {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            margin: auto;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #7c5cff, #4f8cff);
+            font-weight: bold;
+        }
+
+        .step h3 {
+            margin-top: 20px;
+        }
+
+        .step p {
+            color: #818897;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        /* ================= MATCHING ================= */
+
+        .matching-container {
+            max-width: 900px;
+            margin: 50px auto 0;
+            background: #0f1420;
+            padding: 30px;
+            border: 1px solid #272d3d;
+            border-radius: 18px;
+        }
+
+        .matching-container input {
+            width: 100%;
+            padding: 15px;
+            background: #090d16;
+            border: 1px solid #2a3040;
+            border-radius: 8px;
+            color: white;
+            outline: none;
+            margin-bottom: 15px;
+        }
+
+        .match-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            background: linear-gradient(135deg, #7c5cff, #4f8cff);
+        }
+
+        #matchResult {
+            margin-top: 20px;
+            display: none;
+            padding: 20px;
+            border-radius: 10px;
+            background: #151b29;
+            color: #bfc5d3;
+        }
+
+        /* ================= CTA ================= */
+
+        .cta {
+            text-align: center;
+            padding: 100px 7%;
+            background:
+                radial-gradient(circle, rgba(102,82,220,0.2), transparent 50%);
+        }
+
+        .cta h2 {
+            font-size: 45px;
+            letter-spacing: -2px;
+        }
+
+        .cta p {
+            color: #8d94a3;
+            margin: 15px auto 30px;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            padding: 35px 7%;
+            border-top: 1px solid #1b2030;
+            display: flex;
+            justify-content: space-between;
+            color: #737a8a;
+            font-size: 13px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 900px) {
+
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .services,
+            .steps {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .hero h1 {
+                font-size: 45px;
+                letter-spacing: -2px;
+            }
+
+            .services,
+            .steps,
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .primary-btn,
+            .secondary-btn {
+                text-align: center;
+            }
+
+            .cta h2 {
+                font-size: 35px;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav>
+
+    <div class="logo">
+        Talent<span>AI</span>
+    </div>
+
+    <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#process">How It Works</a></li>
+        <li><a href="#matching">AI Matching</a></li>
+    </ul>
+
+    <a href="#contact" class="nav-btn">
+        Hire Talent
+    </a>
+
+</nav>
+
+
+<!-- ================= HERO ================= -->
+
+<section class="hero" id="home">
+
+    <div>
+
+        <div class="badge">
+            ✦ AI-Powered Recruitment
+        </div>
+
+        <h1>
+            Hire smarter.
+            <span>Build faster.</span>
+        </h1>
+
+        <p>
+            We use artificial intelligence to discover, screen,
+            match and shortlist the right candidates for your
+            business — faster and more efficiently.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a href="#contact" class="primary-btn">
+                Find Your Next Hire →
+            </a>
+
+            <a href="#services" class="secondary-btn">
+                Explore Services
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- AI DASHBOARD -->
+
+    <div class="ai-card">
+
+        <div class="card-header">
+
+            <h3>AI Candidate Matching</h3>
+
+            <span class="status">
+                ● AI Active
+            </span>
+
+        </div>
+
+
+        <div class="candidate">
+
+            <div class="candidate-top">
+
+                <div class="candidate-name">
+                    Sarah Ahmed
+                </div>
+
+                <div class="score">
+                    96%
+                </div>
+
+            </div>
+
+            <div class="candidate-role">
+                Senior AI Engineer
+            </div>
+
+            <div class="progress">
+                <span style="width:96%"></span>
+            </div>
+
+        </div>
+
+
+        <div class="candidate">
+
+            <div class="candidate-top">
+
+                <div class="candidate-name">
+                    Ali Hassan
+                </div>
+
+                <div class="score">
+                    91%
+                </div>
+
+            </div>
+
+            <div class="candidate-role">
+                Full-Stack Developer
+            </div>
+
+            <div class="progress">
+                <span style="width:91%"></span>
+            </div>
+
+        </div>
+
+
+        <div class="candidate">
+
+            <div class="candidate-top">
+
+                <div class="candidate-name">
+                    Ayesha Khan
+                </div>
+
+                <div class="score">
+                    87%
+                </div>
+
+            </div>
+
+            <div class="candidate-role">
+                Machine Learning Engineer
+            </div>
+
+            <div class="progress">
+                <span style="width:87%"></span>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= STATS ================= -->
+
+<div class="stats">
+
+    <div class="stat">
+        <h2>10K+</h2>
+        <p>Candidates Screened</p>
+    </div>
+
+    <div class="stat">
+        <h2>500+</h2>
+        <p>Successful Placements</p>
+    </div>
+
+    <div class="stat">
+        <h2>70%</h2>
+        <p>Faster Screening</p>
+    </div>
+
+    <div class="stat">
+        <h2>95%</h2>
+        <p>Client Satisfaction</p>
+    </div>
+
+</div>
+
+
+<!-- ================= SERVICES ================= -->
+
+<section id="services">
+
+    <div class="section-title">
+
+        <h2>
+            Recruitment powered by AI
+        </h2>
+
+        <p>
+            From sourcing to shortlisting, our AI handles
+            repetitive recruitment tasks while your team
+            focuses on hiring the best people.
+        </p>
+
+    </div>
+
+
+    <div class="services">
+
+        <div class="service">
+
+            <div class="icon">⌕</div>
+
+            <h3>AI Candidate Sourcing</h3>
+
+            <p>
+                Discover qualified candidates across multiple
+                talent sources using intelligent search.
+            </p>
+
+        </div>
+
+
+        <div class="service">
+
+            <div class="icon">◉</div>
+
+            <h3>Smart Screening</h3>
+
+            <p>
+                Automatically analyze resumes, skills,
+                experience and job requirements.
+            </p>
+
+        </div>
+
+
+        <div class="service">
+
+            <div class="icon">✦</div>
+
+            <h3>AI Matching</h3>
+
+            <p>
+                Match candidates against your requirements
+                and generate intelligent compatibility scores.
+            </p>
+
+        </div>
+
+
+        <div class="service">
+
+            <div class="icon">◌</div>
+
+            <h3>Interview Automation</h3>
+
+            <p>
+                Automate candidate communication, scheduling
+                and initial AI-powered interviews.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= PROCESS ================= -->
+
+<section class="process" id="process">
+
+    <div class="section-title">
+
+        <h2>
+            How it works
+        </h2>
+
+        <p>
+            A simple recruitment process designed to save
+            your team time and improve hiring decisions.
+        </p>
+
+    </div>
+
+
+    <div class="steps">
+
+        <div class="step">
+
+            <div class="step-number">01</div>
+
+            <h3>Tell Us Your Need</h3>
+
+            <p>
+                Share your job requirements,
+                skills and ideal candidate.
+            </p>
+
+        </div>
+
+
+        <div class="step">
+
+            <div class="step-number">02</div>
+
+            <h3>AI Finds Candidates</h3>
+
+            <p>
+                Our AI searches and identifies
+                relevant candidates.
+            </p>
+
+        </div>
+
+
+        <div class="step">
+
+            <div class="step-number">03</div>
+
+            <h3>AI Screens & Matches</h3>
+
+            <p>
+                Candidates are analyzed and ranked
+                according to your requirements.
+            </p>
+
+        </div>
+
+
+        <div class="step">
+
+            <div class="step-number">04</div>
+
+            <h3>You Hire</h3>
+
+            <p>
+                Review the best candidates and
+                make the final hiring decision.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= AI MATCHING DEMO ================= -->
+
+<section id="matching">
+
+    <div class="section-title">
+
+        <h2>
+            Try our AI matching demo
+        </h2>
+
+        <p>
+            Enter a job role and see how our recruitment
+            engine could evaluate candidates.
+        </p>
+
+    </div>
+
+
+    <div class="matching-container">
+
+        <input
+            type="text"
+            id="jobInput"
+            placeholder="Example: AI Engineer, React Developer..."
+        >
+
+        <button
+            class="match-btn"
+            onclick="findCandidates()"
+        >
+            Find Best Candidates
+        </button>
+
+        <div id="matchResult"></div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= CTA ================= -->
+
+<section class="cta" id="contact">
+
+    <h2>
+        Ready to hire smarter?
+    </h2>
+
+    <p>
+        Let AI handle the repetitive work while
+        you focus on building your team.
+    </p>
+
+    <a href="mailto:hello@talentai.com" class="primary-btn">
+        Talk to Our Recruitment Team →
+    </a>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <div>
+        © 2026 TalentAI. All rights reserved.
+    </div>
+
+    <div>
+        AI-Powered Recruitment Agency
+    </div>
+
+</footer>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+function findCandidates() {
+
+    const input = document
+        .getElementById("jobInput")
+        .value
+        .trim();
+
+    const result = document
+        .getElementById("matchResult");
+
+
+    if (input === "") {
+
+        result.style.display = "block";
+
+        result.innerHTML =
+            "⚠️ Please enter a job role first.";
+
+        return;
+    }
+
+
+    result.style.display = "block";
+
+
+    result.innerHTML = `
+        <strong>AI Analysis Complete</strong>
+        <br><br>
+
+        Job Role:
+        <strong>${input}</strong>
+
+        <br><br>
+
+        🎯 <strong>94%</strong> role compatibility detected
+        <br>
+
+        👤 <strong>128</strong> potential candidates found
+        <br>
+
+        ⭐ <strong>12</strong> highly qualified candidates shortlisted
+
+        <br><br>
+
+        <small>
+            In a production system, these results would
+            come from your AI recruitment engine.
+        </small>
+    `;
+}
+
+
+/* Smooth navbar effect */
+
+window.addEventListener("scroll", function () {
+
+    const nav = document.querySelector("nav");
+
+    if (window.scrollY > 50) {
+
+        nav.style.background =
+            "rgba(8, 11, 20, 0.95)";
+
+    } else {
+
+        nav.style.background =
+            "rgba(8, 11, 20, 0.85)";
+    }
+
+});
+
+</script>
+
+</body>
+</html>
